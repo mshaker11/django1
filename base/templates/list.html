@@ -1,5 +1,13 @@
 <h1>Item List</h1>
 
+{% if messages %}
+    {% for message in messages %}
+        <div>
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
+
 {% for item in items %}
     <p>
         {{ item.name }}
