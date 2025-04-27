@@ -1,0 +1,8 @@
+<h1>Create New Item</h1>
+
+<form method="POST">
+    {% csrf_token %}
+    <input type="text" name="name" placeholder="Enter item name">
+    <button type="submit">Add Item</button>
+</form>
+

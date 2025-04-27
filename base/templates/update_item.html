@@ -1,0 +1,7 @@
+<h1>Update Item</h1>
+
+<form method="POST">
+    {% csrf_token %}
+    <input type="text" name="name" value="{{ item.name }}">
+    <button type="submit">Update Item</button>
+</form>
