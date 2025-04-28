@@ -59,3 +59,17 @@ def loginUser(request):
             messages.error(request, "Invalid username or password.")
 
     return render(request, 'login.html')
+from django.contrib.auth.forms import UserCreationForm
+
+def registerUser(request):
+    form = UserCreationForm()
+
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            messages.success(request, "Account created successfully!")
+            return redirect('login')
+
+    context = {'form': form}
+    return render(request, 'register.html', context)
