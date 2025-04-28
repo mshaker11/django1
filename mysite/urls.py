@@ -18,5 +18,7 @@ urlpatterns = [
      path('activity/', views.activityFeed, name='activity-feed'),
      path('profile/<str:pk>/', views.profileUser, name='profile'),
      path('account/edit/', views.editAccount, name='edit-account'),
+     path('api/', views.getRoutes, name='api-routes'),
+
 ]
 
