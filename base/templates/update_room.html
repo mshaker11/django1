@@ -1,0 +1,8 @@
+<h1>Update Room</h1>
+
+<form method="POST">
+    {% csrf_token %}
+    <input type="text" name="name" value="{{ room.name }}">
+    <textarea name="description">{{ room.description }}</textarea>
+    <button type="submit">Update</button>
+</form>

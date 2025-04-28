@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth import logout
 from django.shortcuts import render, redirect
-from .models import Item
+from .models import Item, Room
 
 def home(request):
     items = Item.objects.all()
@@ -73,3 +73,49 @@ def registerUser(request):
 
     context = {'form': form}
     return render(request, 'register.html', context)
+from .models import Item, Room
+
+def roomList(request):
+    rooms = Room.objects.all()
+    context = {'rooms': rooms}
+    return render(request, 'room_list.html', context)
+
+@login_required(login_url='login')
+def createRoom(request):
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        description = request.POST.get('description')
+        Room.objects.create(
+            host=request.user,
+            name=name,
+            description=description
+        )
+        messages.success(request, "Room created successfully!")
+        return redirect('room-list')
+    return render(request, 'create_room.html')
+
+@login_required(login_url='login')
+def updateRoom(request, pk):
+    room = Room.objects.get(id=pk)
+
+    if request.method == 'POST':
+        room.name = request.POST.get('name')
+        room.description = request.POST.get('description')
+        room.save()
+        messages.success(request, "Room updated successfully!")
+        return redirect('room-list')
+
+    context = {'room': room}
+    return render(request, 'update_room.html', context)
+
+@login_required(login_url='login')
+def deleteRoom(request, pk):
+    room = Room.objects.get(id=pk)
+
+    if request.method == 'POST':
+        room.delete()
+        messages.success(request, "Room deleted successfully!")
+        return redirect('room-list')
+
+    context = {'room': room}
+    return render(request, 'delete_room.html', context)

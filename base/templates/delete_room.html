@@ -1,0 +1,8 @@
+<h1>Delete Room</h1>
+
+<p>Are you sure you want to delete "{{ room.name }}"?</p>
+
+<form method="POST">
+    {% csrf_token %}
+    <button type="submit">Yes, delete</button>
+</form>
