@@ -2,7 +2,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth import logout
 from django.shortcuts import render, redirect
-from .models import Item, Room, Activity
+from .models import Item, Room, Activity, Message
+from django.contrib.auth.models import User
 
 def home(request):
     items = Item.objects.all()
@@ -139,3 +140,15 @@ def activityFeed(request):
         'activities': activities
     })
 
+def profileUser(request, pk):
+    user_obj = User.objects.get(id=pk)
+    
+    rooms = Room.objects.filter(host=user_obj)
+    
+    messages_posted = Message.objects.filter(user=user_obj).order_by('-created_at')
+    context = {
+        'profile_user': user_obj,
+        'rooms': rooms,
+        'messages_posted': messages_posted
+    }
+    return render(request, 'profile.html', context)

@@ -1,0 +1,20 @@
+<h1>{{ profile_user.username }}’s Profile</h1>
+
+<p>Date joined: {{ profile_user.date_joined }}</p>
+<p>Email: {{ profile_user.email }}</p>
+
+<h2>Rooms Hosted</h2>
+{% for room in rooms %}
+    <p>
+        <a href="{% url 'update-room' room.id %}">{{ room.name }}</a>
+    </p>
+{% empty %}
+    <p>No rooms hosted.</p>
+{% endfor %}
+
+<h2>Messages Posted</h2>
+{% for msg in messages_posted %}
+    <p>{{ msg.created_at }} – {{ msg.content }}</p>
+{% empty %}
+    <p>No messages posted.</p>
+{% endfor %}
