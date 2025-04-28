@@ -17,5 +17,6 @@ urlpatterns = [
     path('rooms/delete/<str:pk>/', views.deleteRoom, name='delete-room'),
      path('activity/', views.activityFeed, name='activity-feed'),
      path('profile/<str:pk>/', views.profileUser, name='profile'),
+     path('account/edit/', views.editAccount, name='edit-account'),
 ]
 

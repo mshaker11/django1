@@ -152,3 +152,19 @@ def profileUser(request, pk):
         'messages_posted': messages_posted
     }
     return render(request, 'profile.html', context)
+from django.contrib.auth.forms import UserChangeForm
+
+@login_required(login_url='login')
+def editAccount(request):
+    user = request.user
+    form = UserChangeForm(instance=user)
+
+    if request.method == 'POST':
+        form = UserChangeForm(request.POST, instance=user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Account updated successfully!")
+            return redirect('profile', pk=user.id)
+
+    context = {'form': form}
+    return render(request, 'edit_account.html', context)
