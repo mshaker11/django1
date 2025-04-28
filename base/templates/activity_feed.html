@@ -1,0 +1,7 @@
+<h1>Activity Feed</h1>
+
+{% for activity in activities %}
+    <p>{{ activity.timestamp }} – {{ activity.user.username }}: {{ activity.action }}</p>
+{% empty %}
+    <p>No activity yet.</p>
+{% endfor %}

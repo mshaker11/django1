@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth import logout
 from django.shortcuts import render, redirect
-from .models import Item, Room
+from .models import Item, Room, Activity
 
 def home(request):
     items = Item.objects.all()
@@ -42,6 +42,7 @@ def logoutUser(request):
     logout(request)
     messages.success(request, "You have been logged out.")
     return redirect('home')
+
 from django.contrib.auth import authenticate, login
 
 def loginUser(request):
@@ -59,6 +60,7 @@ def loginUser(request):
             messages.error(request, "Invalid username or password.")
 
     return render(request, 'login.html')
+
 from django.contrib.auth.forms import UserCreationForm
 
 def registerUser(request):
@@ -73,7 +75,6 @@ def registerUser(request):
 
     context = {'form': form}
     return render(request, 'register.html', context)
-from .models import Item, Room
 
 def roomList(request):
     rooms = Room.objects.all()
@@ -85,11 +86,15 @@ def createRoom(request):
     if request.method == 'POST':
         name = request.POST.get('name')
         description = request.POST.get('description')
-        Room.objects.create(
+        room = Room.objects.create(
             host=request.user,
             name=name,
             description=description
         )
+
+        # Log activity for room creation
+        Activity.objects.create(user=request.user, action=f"Created room: {name}")
+
         messages.success(request, "Room created successfully!")
         return redirect('room-list')
     return render(request, 'create_room.html')
@@ -102,6 +107,10 @@ def updateRoom(request, pk):
         room.name = request.POST.get('name')
         room.description = request.POST.get('description')
         room.save()
+
+        # Log activity for room update
+        Activity.objects.create(user=request.user, action=f"Updated room: {room.name}")
+
         messages.success(request, "Room updated successfully!")
         return redirect('room-list')
 
@@ -114,8 +123,19 @@ def deleteRoom(request, pk):
 
     if request.method == 'POST':
         room.delete()
+
+        
+        Activity.objects.create(user=request.user, action=f"Deleted room: {room.name}")
+
         messages.success(request, "Room deleted successfully!")
         return redirect('room-list')
 
     context = {'room': room}
     return render(request, 'delete_room.html', context)
+def activityFeed(request):
+    # Fetch all Activity records, newest first
+    activities = Activity.objects.all().order_by('-timestamp')
+    return render(request, 'activity_feed.html', {
+        'activities': activities
+    })
+
